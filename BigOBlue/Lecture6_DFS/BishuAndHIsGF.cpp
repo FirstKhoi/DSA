@@ -1,7 +1,3 @@
-#include<iostream>
-#include<vector>
-using namespace std;
-//https://bigocoder.com/courses/252/lectures/3824/problems/547?view=statement
 #include<bits/stdc++.h>
 #define MAX 100 + 5
 using namespace std;
