@@ -9,12 +9,11 @@ int main(){
     for(int i = 0; i < n; i++) {
         cin >> s;
     }
-    int res = 0, bit = 1;
+    int res = 0;
     for(int i = 0; i < n; i++) {
         if(s == "X++" || s == "++X") {
-            res += bit; 
-            bit = res;
-        } else bit -= res;
+            res++;
+        } else res--;
     }
     cout << res << endl;
     return 0;
