@@ -1,26 +1,32 @@
-#include<bits/stdc++.h>
+#include <iostream>
+#include <queue>
+#include <unordered_set>
 using namespace std;
-using ll = long long;
 
-int main(){
-    ios::sync_with_stdio(0);
-    cin.tie(nullptr);
-    int Q;
-    cin >> Q;
-    set<ll> heap;
-    while (Q--) {
+int main() {
+    int q;
+    cin >> q;
+    priority_queue<int, vector<int>, greater<int>> pq, pqRemove;
+    unordered_set<int> removed;
+
+    while (q--) {
         int type;
         cin >> type;
         if (type == 1) {
-            ll v;
+            int v;
             cin >> v;
-            heap.insert(v);
+            pq.push(v);
         } else if (type == 2) {
-            ll v;
+            int v;
             cin >> v;
-            heap.erase(v);
+            pqRemove.push(v);
+            removed.insert(v);
         } else if (type == 3) {
-            cout << *heap.begin() << '\n';
+            while (!pq.empty() && removed.count(pq.top())) {
+                removed.erase(pq.top());
+                pq.pop();
+            }
+            cout << pq.top() << endl;
         }
     }
     return 0;
