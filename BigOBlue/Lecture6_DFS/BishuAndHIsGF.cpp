@@ -16,7 +16,7 @@ int V, E;
             int u = s.top();
             s.pop();
 
-            for(int v : graph[u]) {
+            for(int &v : graph[u]) {
                 if(!visited[v]) {
                     visited[v] = true;
                     dist[v] = dist[u] + 1;

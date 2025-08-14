@@ -2,7 +2,7 @@
 #include <queue>
 #include <unordered_set>
 using namespace std;
-
+//https://bigocoder.com/courses/252/lectures/3825/problems/554?view=statement
 int main() {
     int q;
     cin >> q;

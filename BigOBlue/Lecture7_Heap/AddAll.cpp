@@ -1,7 +1,7 @@
 #include<iostream>
 #include<queue>
 using namespace std;
-
+//https://bigocoder.com/courses/252/lectures/3825/problems/552?view=statement
 int main() {
     priority_queue<int, vector<int>, greater<int>> pq;
     int n, x;

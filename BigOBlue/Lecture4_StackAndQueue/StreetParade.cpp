@@ -31,6 +31,4 @@ int main(){
         cout << (need == n + 1 ? "yes" : "no") << '\n';
     }
     return 0;
-}git rm -r --cached .
-git add .
-git commit -m "Clean up ignored files"
+}
