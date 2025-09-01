@@ -1,10 +1,8 @@
 #include<iostream>
-#include<vector>
 #include<queue>
-#define MAX 500 + 1
+#define MAX 500 + 5
 using namespace std;
 const int INF = 1e9 + 7;
-//https://bigocoder.com/courses/252/lectures/3826/problems/602?view=statement
 
 vector<vector<pair<int, int>>> graph;
 vector<int> dist(MAX, INF);
@@ -14,17 +12,15 @@ void Dijkstra(int s) {
     pq.push(make_pair(s, 0));
     dist[s] = 0;
 
-    while(!pq.empty()) {
+    while (!pq.empty()) {
         pair<int, int> top = pq.top();
         pq.pop();
+
         int u = top.first;
         int w = top.second;
-        if(dist[u] != w) {
-            continue;
-        }
 
-        for(pair<int, int> &neighbor : graph[u]) {
-            if(w + neighbor.second < dist[neighbor.first]) {
+        for (pair<int, int> &neighbor : graph[u]) {
+            if (w + neighbor.second < dist[neighbor.first]) {
                 dist[neighbor.first] = w + neighbor.second;
                 pq.push(make_pair(neighbor.first, dist[neighbor.first]));
             }
@@ -33,29 +29,31 @@ void Dijkstra(int s) {
 }
 
 int main() {
-    int n, a, b, w;
-    cin >> n;
-    graph = vector<vector<pair<int, int>>>(MAX, vector<pair<int ,int>>());
+    int N, A, B, W;
+    cin >> N;
+    graph = vector<vector<pair<int, int>>>(MAX, vector<pair<int, int>>());
 
-    for(int i = 0; i < n; i++) {
-        cin >> a >> b >> w;
-        graph[a].push_back(make_pair(b, w));
-        graph[b].push_back(make_pair(a, w));
+    for (int i = 0; i < N; i++) {
+        cin >> A >> B >> W;
+        graph[A].push_back(make_pair(B, W));
+        graph[B].push_back(make_pair(A, W));
     }
 
-    int s, q, v;
-    cin >> s;
-    Dijkstra(s);
-    cin >> q;
+    int S, Q, V;
+    cin >> S;
+    Dijkstra(S);
+    cin >> Q;
 
-    for(int i = 0; i < q; i++) {
-        cin >> v;
-
-        if(dist[v] != INF) {
-            cout << dist[v] << endl;
-        } else {
+    for (int i = 0; i < Q; i++) {
+        cin >> V;
+        
+        if (dist[V] != INF) {
+            cout << dist[V] << endl;
+        }
+        else {
             cout << "NO PATH" << endl;
         }
     }
+
     return 0;
 }

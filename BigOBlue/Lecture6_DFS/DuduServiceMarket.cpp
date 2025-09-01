@@ -1,33 +1,34 @@
 #include<iostream>
-#include<stack>
 #include<vector>
-#define MAX 10000 + 5
+#define MAX 10005
 using namespace std;
 
 int N, M;
 int visited[MAX];
 vector<int> graph[MAX];
 
-bool DFS(int src) {
-    visited[src] = 1;
+bool DFS(int u) {
+    visited[u] = 1;
 
-    for(int &v : graph[src]) {
-        if(visited[v] == 1) {
-            return true;
-        } else if(visited[v] == 0) {
+    for(int &v : graph[u]) {
+        if(visited[v] == 1) return true;
+        else if(visited[v] == 0) {
             if(DFS(v)) {
                 return true;
             }
         }
     }
-    visited[src] = 2;
+    visited[u] = 2;
     return false;
 }
 
 int main() {
-    int t, u, v;
-    cin >> t;
-    while(t--) {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+
+    int T, u, v; 
+    cin >> T;
+    while(T--) {
         cin >> N >> M;
 
         for(int i = 1; i <= N; i++) {
@@ -50,7 +51,10 @@ int main() {
                 }
             }
         }
-        cout << (isCyclic ? "YES" : "NO") << endl;
+
+        if(isCyclic) {
+            cout << "YES" << endl;
+        } else cout << "NO" << endl;
     }
     return 0;
 }

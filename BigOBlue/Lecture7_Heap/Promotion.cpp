@@ -1,20 +1,30 @@
-#include <bits/stdc++.h>
+#include<iostream>
+#include<queue>
 using namespace std;
 const int MAX = 1e6 + 5;
 
+struct Bill {
+    int number, price;
+};
+
+struct BillAscendingPrice {
+    bool operator() (const Bill &a, const Bill &b) {
+        return a.price < b.price;
+    }
+};
+
+struct BillDescendingPrice {
+    bool operator() (const Bill &a, const Bill &b) {
+        return a.price > b.price;
+    }
+};
+
 int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    
     int n, k, x, nbills = 0;
     long long money = 0;
-    vector<bool> taken(MAX, false);
-    
-    auto maxHeapCmp = [](const pair<int,int>& a, const pair<int,int>& b) { return a.second < b.second; };
-    auto minHeapCmp = [](const pair<int,int>& a, const pair<int,int>& b) { return a.second > b.second; };
-    
-    priority_queue<pair<int,int>, vector<pair<int,int>>, decltype(maxHeapCmp)> maxHeap(maxHeapCmp);
-    priority_queue<pair<int,int>, vector<pair<int,int>>, decltype(minHeapCmp)> minHeap(minHeapCmp);
+    bool taken[MAX] = {};
+    priority_queue<Bill, vector<Bill>, BillAscendingPrice> maxHeap;
+    priority_queue<Bill, vector<Bill>, BillDescendingPrice> minHeap;
     
     cin >> n;
     
@@ -23,24 +33,25 @@ int main() {
 
         for (int j = 0; j < k; j++) {
             cin >> x;
-            maxHeap.push({++nbills, x});
-            minHeap.push({nbills, x});
+            nbills++;
+            maxHeap.push((Bill) {nbills, x});
+            minHeap.push((Bill) {nbills, x});
         }
 
-        while (!maxHeap.empty() && taken[maxHeap.top().first]) {
+        while (taken[maxHeap.top().number]) {
             maxHeap.pop();
         }
 
-        while (!minHeap.empty() && taken[minHeap.top().first]) {
+        while (taken[minHeap.top().number]) {
             minHeap.pop();
         }
 
-        money += maxHeap.top().second - minHeap.top().second;
-        taken[maxHeap.top().first] = taken[minHeap.top().first] = true;
+        money += maxHeap.top().price - minHeap.top().price;
+        taken[maxHeap.top().number] = taken[minHeap.top().number] = true;
         maxHeap.pop();
         minHeap.pop();
     }
 
-    cout << money << endl;
+    cout << money;
     return 0;
 }

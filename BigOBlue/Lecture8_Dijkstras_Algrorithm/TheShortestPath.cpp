@@ -1,15 +1,14 @@
 #include<iostream>
 #include<queue>
+#define MAX 10005
+const int INF = 1e9 + 7;
 using namespace std;
-const int INF = 1e7 + 9;
-#define MAX 10000 + 5
-//https://bigocoder.com/courses/252/lectures/3826/problems/604?view=statement
 
 vector<pair<int, int>> graph[MAX];
 vector<int> dist(MAX, INF);
 vector<string> cities;
 
-int City(string name) {
+int Name(string name) {
     for(int i = 0; i < cities.size(); i++) {
         if(name == cities[i]) {
             return i;
@@ -18,64 +17,65 @@ int City(string name) {
     return -1;
 }
 
-void Dijkstra(int s, int f) {
+void Dijkstra(int s, int e) {
     priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
-    pq.push(make_pair(s, 0));
+    pq.push({s, 0});
     dist[s] = 0;
-    
+
     while(!pq.empty()) {
         pair<int, int> top = pq.top();
         pq.pop();
 
         int u = top.first;
         int w = top.second;
-        
-        if(dist[u] == w) {
-            continue;
-        }
 
         for(pair<int, int> &neighbor : graph[u]) {
-            if(w + neighbor.second < dist[neighbor.first]) {
-                dist[neighbor.second] = w + neighbor.first;
-                pq.push(make_pair(dist[neighbor.first], neighbor.first));
+            if(w + neighbor.second <= dist[neighbor.first]) {
+                dist[neighbor.first] = w + neighbor.second;
+                pq.push({neighbor.first, dist[neighbor.first]});
             }
         }
     }
 }
 
 int main() {
-    int t, n, q;
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    int T, N, Q;
     int neighbors, u, v, w;
-    string name, sCity, fCity;
-    cin >> t;
+    string name, sCity, eCity;
+    cin >> T;
 
-    while(t--) {
-        cin >> n;
+    while(T--) {
+        cin >> N;
 
-        for(int i = 1; i < n; i++) {
+        for(int i = 1; i <= N; i++) {
             graph[i].clear();
         }
+    
         cities.clear();
-
-        for(int u = 1; u < n; u++) {
+    
+        for(int u = 1; u <= N; u++) {
             cin >> name >> neighbors;
             cities.push_back(name);
+            
+            for(int i = 0; i < neighbors; i++) {
+                cin >> v >> w;
+                graph[u].push_back({v, w});
+            }
         }
 
-        for(int i = 0; i < neighbors; i++) {
-            cin >> v >> w;
-            graph[u].push_back(make_pair(w, v));
+        cin >> Q;
+        for(int i = 0; i < Q; i++) {
+            cin >> sCity >> eCity;
+            int s = Name(sCity) + 1;
+            int e = Name(eCity) + 1;
+            dist = vector<int>(N + 1, INF);
+            Dijkstra(s, e);
+            cout << dist[e] << endl;
         }
 
-        cin >> q;
-        for(int i = 0; i < q; i++) {
-            cin >> sCity >> fCity;
-            int s = City(sCity) + 1;
-            int f = City(fCity) + 1;
-            dist = vector<int>(n + 1, INF);
-            Dijkstra(s, f);
-            cout << dist[f] << endl;
-        }
     }
+
     return 0;
 }

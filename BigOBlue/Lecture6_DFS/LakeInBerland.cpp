@@ -1,6 +1,7 @@
-#include <bits/stdc++.h>
-#define MAX 51
-//https://bigocoder.com/courses/252/lectures/3824/problems/564?view=statement
+#include<iostream>
+#include<vector>
+#include<stack>
+#define MAX 55
 using namespace std;
 
 const int dr[] = {0, 0, 1, -1};

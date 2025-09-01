@@ -1,49 +1,49 @@
 #include<iostream>
 #include<stack>
 #include<vector>
-#include<cstring>
-#define MAX 10000 + 5
+#include<algorithm>
+const int MAX = 10005;
 using namespace std;
 
-int n, m;
-bool visited[MAX];
+int V, E;
 vector<int> graph[MAX];
+bool visited[MAX];
 
-int DFS(int src) {
-    memset(visited, false, sizeof(visited));
-    stack<int> s;
-    visited[src] = true;
-    s.push(src);
+int DFS(int s) {
+    stack<int> st;
+    int count = 0;
+    visited[s] = true;
+    st.push(s);
 
-    int boms = 0;
-    while(!s.empty()) {
-        int u = s.top();
-        s.pop();
-        boms++;
-
-        for(int &v : graph[u]) {
+    while(!st.empty()) {
+        int u = st.top();
+        st.pop();
+        count++;
+        for(auto &v : graph[u]) {
             if(!visited[v]) {
                 visited[v] = true;
-                s.push(v);
+                st.push(v);
             }
         }
     }
-    return boms;
+    return count;
 }
 
 int main() {
-    int u, v;
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    int n, m, u, v;
     cin >> n >> m;
-
-    for(int i =0; i < m; i++) {
+    vector<int> boms(n);
+    for(int i = 0; i < m; i++) {
         cin >> u >> v;
         graph[u].push_back(v);
     }
-
-    int maxBoms = 0;
+    int max_bombs = 0;
     for(int i = 1; i <= n; i++) {
-        maxBoms = max(maxBoms, DFS(i));
+        fill(visited, visited + MAX, false);
+        max_bombs = max(max_bombs, DFS(i));
     }
-    cout << maxBoms << endl;
+    cout << max_bombs << endl;
     return 0;
 }

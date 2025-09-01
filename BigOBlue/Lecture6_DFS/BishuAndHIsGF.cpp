@@ -1,44 +1,45 @@
-#include<bits/stdc++.h>
-#define MAX 100 + 5
+#include<iostream>
+#include<stack>
+#include<vector>
+#define MAX 1005
 using namespace std;
-//https://bigocoder.com/courses/252/lectures/3824/problems/547?view=statement
+
 int V, E;
-    bool visited[MAX];
-    int dist[MAX];
-    vector<int> graph[MAX];
-    
-    void DFS(int scr) {
-        stack<int> s;
-        visited[scr] = true;
-        dist[scr] = 0;
-        s.push(scr);
-        while(!s.empty()) {
-            int u = s.top();
-            s.pop();
+bool visited[MAX];
+int dist[MAX];
+vector<int> graph[MAX];
 
-            for(int &v : graph[u]) {
-                if(!visited[v]) {
-                    visited[v] = true;
-                    dist[v] = dist[u] + 1;
-                    s.push(v);
-                }
+void DFS(int s) {
+    stack<int> st;
+    visited[s] = true;
+    st.push(s);
+
+    while(!st.empty()) {
+        int u = st.top(); 
+        st.pop();
+
+        for(auto &v : graph[u]) {
+            if(!visited[v]) {
+                visited[v] = true;
+                dist[v] = dist[u] + 1;
+                st.push(v);
             }
-        } 
+        }
     }
+}
 
-int main(){
-    ios_base::sync_with_stdio(false);
-    cin.tie(nullptr);
+int main() {
     int Q, u, v;
     cin >> V;
     E = V - 1;
 
-    for(int i = 1; i < E; i++) {
+    for(int i = 0; i < E; i++) {
         cin >> u >> v;
         graph[u].push_back(v);
         graph[v].push_back(u);
     }
 
+    DFS(1);
     int ans = 0, min_dist = MAX;
     cin >> Q;
     for(int i = 0; i < Q; i++) {
@@ -48,12 +49,6 @@ int main(){
             ans = u;
         }
     }
-    
-    cout << ans;
-    return 0;
-}
-
-
-int main(){
+    cout << ans << endl;
     return 0;
 }

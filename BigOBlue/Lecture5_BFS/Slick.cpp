@@ -1,60 +1,81 @@
-#include <iostream>
-#include <vector>
-#include <queue>
-#include <map>
-#include <algorithm>
+#include<iostream>
+#include<queue>
+#include<vector>
+#define MAX 255
 using namespace std;
-//https://bigocoder.com/courses/252/lectures/3823/problems/546?view=statement
 
-const int dx[4] = {0, 1, 0, -1};
-const int dy[4] = {1, 0, -1, 0};
+int N, M;
+const int dr[] = {0, 0, 1, -1};
+const int dc[] = {1, -1, 0, 0};
 
-int bfs(vector<vector<int>>& grid, vector<vector<bool>>& visited, int x, int y, int N, int M) {
-    queue<pair<int, int>> q;
-    q.push({x, y});
-    visited[x][y] = true;
-    int size = 1;
+int dist[MAX * MAX];
+int grid[MAX][MAX];
 
-    while (!q.empty()) {
-        auto [cx, cy] = q.front(); q.pop();
-        for (int d = 0; d < 4; ++d) {
-            int nx = cx + dx[d];
-            int ny = cy + dy[d];
-            if (nx >= 0 && nx < N && ny >= 0 && ny < M 
-                && !visited[nx][ny] && grid[nx][ny] == 1) {
-                visited[nx][ny] = true;
-                q.push({nx, ny});
-                size++;
+struct Cell {
+    int r, c;
+};
+
+bool isValid(int r, int c) {
+    return r >= 0 && c >= 0 && r < N && c < M;
+}
+
+void BFS(Cell s) {
+    queue<Cell> q;
+    q.push(s);
+    grid[s.r][s.c] = 0;
+    int count = 1;
+
+    while(!q.empty()) {
+        Cell u = q.front();
+        q.pop();
+
+        for(int i = 0; i < 4; i++) {
+            int r = u.r + dr[i];
+            int c = u.c + dc[i];
+            
+            if(isValid(r, c) && grid[r][c] == 1) {
+                grid[r][c] = 0;
+                q.push((Cell) {r, c});
+                count++;
             }
         }
     }
-    return size;
+    dist[count]++;
 }
 
 int main() {
-    while (true) {
-        int N, M;
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    while(true) {
         cin >> N >> M;
-        if (N == 0 && M == 0) break;
-        vector<vector<int>> grid(N, vector<int>(M));
-        for (int i = 0; i < N; ++i)
-            for (int j = 0; j < M; ++j)
-                cin >> grid[i][j];
+        if(N == 0 && M == 0) {
+            break;
+        }
 
-        vector<vector<bool>> visited(N, vector<bool>(M, false));
-        vector<int> sizes;
-        for (int i = 0; i < N; ++i)
-            for (int j = 0; j < M; ++j)
-                if (grid[i][j] == 1 && !visited[i][j]) {
-                    int sz = bfs(grid, visited, i, j, N, M);
-                    sizes.push_back(sz);
+        for(int i = 0; i < N; i++) {
+            for(int j = 0; j < M; j++) {
+                cin >> grid[i][j];
+                dist[i * M + j + 1] = 0;
+            }
+        }
+
+        int nSlicks = 0;
+
+        for(int i = 0; i < N; i++) {
+            for(int j = 0; j < M; j++) {
+                if(grid[i][j] == 1) {
+                    nSlicks++;
+                    BFS((Cell) {i, j});
                 }
-        sort(sizes.begin(), sizes.end());
-        map<int, int> cnt;
-        for (int sz : sizes) cnt[sz]++;
-        cout << sizes.size() << endl;
-        for (auto& [sz, c] : cnt) {
-            cout << sz << " " << c << endl;
+            }
+        }
+
+        cout << nSlicks << endl;
+        
+        for(int i = 1; i <= N * M; i++) {
+            if(dist[i]) {
+                cout << i << " " << dist[i] << endl;
+            }
         }
     }
     return 0;

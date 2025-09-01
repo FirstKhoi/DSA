@@ -1,85 +1,84 @@
-#include <iostream>
-#include <vector>
-#include <queue>
-#include <cstring>
+#include<iostream>
+#include<vector>
+#include<queue>
+#define MAX 105
 using namespace std;
+const int INF = 1e9 + 7;
 
-const int INF = 1e9;
-const int MAXN = 105;
+int n, m;
+vector<bool> visited(MAX, false);
+int dist[MAX], energy[MAX];
+vector<pair<int, int>> graph;
 
-struct Edge {
-    int to;
-};
-
-int n;
-int energy[MAXN];
-vector<Edge> adj[MAXN];
-
-bool reachable(int from, int to) {
+bool hasPathBFS(int s, int f) {
     queue<int> q;
-    bool visited[MAXN] = {0};
-    q.push(from);
-    visited[from] = true;
-    while (!q.empty()) {
-        int u = q.front(); q.pop();
-        if (u == to) return true;
-        for (auto &e : adj[u]) {
-            if (!visited[e.to]) {
-                visited[e.to] = true;
-                q.push(e.to);
-            }
-        }
-    }
-    return false;
-}
+    q.push(s);
+    visited[s] = true;
 
-bool bellman_ford() {
-    int dist[MAXN];
-    for (int i = 1; i <= n; ++i) dist[i] = -INF;
-    dist[1] = 100;
-    for (int k = 1; k < n; ++k) {
-        for (int u = 1; u <= n; ++u) {
-            if (dist[u] > 0) {
-                for (auto &e : adj[u]) {
-                    int v = e.to;
-                    if (dist[u] + energy[v] > dist[v]) {
-                        dist[v] = dist[u] + energy[v];
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+
+        for (pair<int, int> &edge : graph) {
+            if (edge.first == u) {
+                int v = edge.second;
+
+                if (!visited[v]) {
+                    visited[v] = true;
+                    q.push(v);
+
+                    if (v == f) {
+                        return true;
                     }
                 }
             }
-        }
-    }
-
-    if (dist[n] > 0) return true;
-
-    
-    for (int u = 1; u <= n; ++u) {
-        if (dist[u] > 0) {
-            for (auto &e : adj[u]) {
-                int v = e.to;
-                if (dist[u] + energy[v] > dist[v]) {
-                    if (reachable(v, n)) return true;
-                }
-            }
-        }
+        }        
     }
     return false;
 }
 
-int main() {
-    while (cin >> n && n != -1) {
-        for (int i = 1; i <= n; ++i) adj[i].clear();
-        for (int i = 1; i <= n; ++i) {
-            int m, x;
-            cin >> energy[i] >> m;
-            for (int j = 0; j < m; ++j) {
-                cin >> x;
-                adj[i].push_back({x});
+bool BellmanFord(int s, int f) {
+    fill(dist, dist + (n + 1), -INF);
+    dist[1] = 100;
+
+    for (int i = 0; i < n - 1; i++) {
+        for (pair<int, int> &edge : graph) {
+            int u = edge.first;
+            int v = edge.second;
+            if (dist[u] > 0) {
+                dist[v] = max(dist[v], dist[u] + energy[v]);
             }
         }
-        if (bellman_ford()) cout << "winnable\n";
-        else cout << "hopeless\n";
+    }
+
+    for (pair<int, int> &edge : graph) {
+        int u = edge.first;
+        int v = edge.second;
+        if (dist[u] > 0 && dist[u] + energy[v] > dist[v] && hasPathBFS(u, f)) {
+            return true;
+        }
+    }
+
+    return dist[f] > 0;
+}
+
+int main() {
+    int v;
+
+    while (cin >> n, n != -1) {
+        graph.clear();
+
+        for (int u = 1; u <= n; u++) {
+            cin >> energy[u] >> m;
+            
+            for (int i = 0; i < m; i++) {
+                cin >> v;
+                graph.push_back(make_pair(u, v));
+            }
+        }
+
+        bool canGo = BellmanFord(1, n);
+        cout << (canGo ? "winnable" : "hopeless") << endl;
     }
     return 0;
 }
-
