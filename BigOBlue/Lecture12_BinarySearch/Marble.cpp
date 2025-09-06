@@ -2,12 +2,11 @@
 #include <vector>
 #include <algorithm>
 using namespace std;
-//https://bigocoder.com/courses/252/lectures/3844/problems/814?view=statement
 
 int main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
-    int case_num = 1;
+    int tc = 1;
     while (true) {
         int N, Q;
         cin >> N >> Q;
@@ -17,7 +16,7 @@ int main() {
             cin >> a[i];
         }
         sort(a.begin(), a.end());
-        cout << "CASE# " << case_num++ << ":\n";
+        cout << "CASE# " << tc++ << ":\n";
         for (int i = 0; i < Q; i++) {
             int x;
             cin >> x;

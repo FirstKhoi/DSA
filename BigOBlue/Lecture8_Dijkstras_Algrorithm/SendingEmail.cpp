@@ -10,7 +10,7 @@ vector<int> dist(MAX, INF);
 void Dijkstra(int s, int f) {
     priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
     pq.push({s, 0});
-    dist[s] = 0;
+    dist[s] = 0;    
 
     while(!pq.empty()) {
         pair<int, int> top = pq.top();

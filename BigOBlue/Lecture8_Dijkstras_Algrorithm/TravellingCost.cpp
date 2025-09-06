@@ -1,28 +1,30 @@
-#include<iostream>
-#include<queue>
-#define MAX 500 + 5
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <climits>
 using namespace std;
-const int INF = 1e9 + 7;
 
-vector<vector<pair<int, int>>> graph;
-vector<int> dist(MAX, INF);
+vector<pair<int, int>> graph[501];
+vector<int> dist(501, INT_MAX);
 
 void Dijkstra(int s) {
     priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
-    pq.push(make_pair(s, 0));
+    pq.push({0, s});
     dist[s] = 0;
 
-    while (!pq.empty()) {
+    while(!pq.empty()) {
         pair<int, int> top = pq.top();
         pq.pop();
 
-        int u = top.first;
-        int w = top.second;
+        int w = top.first;
+        int u = top.second;
 
-        for (pair<int, int> &neighbor : graph[u]) {
-            if (w + neighbor.second < dist[neighbor.first]) {
-                dist[neighbor.first] = w + neighbor.second;
-                pq.push(make_pair(neighbor.first, dist[neighbor.first]));
+        if(w > dist[u]) continue;
+        
+        for(auto &neighbor : graph[u]) {
+            if(w + neighbor.first < dist[neighbor.second]) {
+                dist[neighbor.second] = w + neighbor.first;
+                pq.push({dist[neighbor.second], neighbor.second});
             }
         }
     }
@@ -31,29 +33,21 @@ void Dijkstra(int s) {
 int main() {
     int N, A, B, W;
     cin >> N;
-    graph = vector<vector<pair<int, int>>>(MAX, vector<pair<int, int>>());
-
-    for (int i = 0; i < N; i++) {
+    for(int i = 0; i < N; i++) {
         cin >> A >> B >> W;
-        graph[A].push_back(make_pair(B, W));
-        graph[B].push_back(make_pair(A, W));
+        graph[A].push_back({W, B});
+        graph[B].push_back({W, A});
     }
 
-    int S, Q, V;
-    cin >> S;
-    Dijkstra(S);
+    int U, Q, V;
+    cin >> U;
+    Dijkstra(U);
     cin >> Q;
-
-    for (int i = 0; i < Q; i++) {
+    for(int i = 0; i < Q; i++) {
         cin >> V;
-        
-        if (dist[V] != INF) {
+        if(dist[V] != INT_MAX) {
             cout << dist[V] << endl;
-        }
-        else {
-            cout << "NO PATH" << endl;
-        }
+        } else cout << "NO PATH" << endl;
     }
-
     return 0;
 }
