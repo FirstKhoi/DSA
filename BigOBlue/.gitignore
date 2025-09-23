@@ -1,0 +1,11 @@
+.DS_Store
+*.dSYM/
+*.dSYM
+*.exe
+*.o
+*.out
+*.log
+.vscode/
+*.swp
+*.tmp
+Contents/
